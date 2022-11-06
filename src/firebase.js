@@ -74,14 +74,12 @@ const registerWithEmailAndPassword = async (name, email, password) => {
 };
 const sendPasswordReset = async (email) => {
     let actionCodeSettings = {
-        // After password reset, the user will be give the ability to go back
-        // to this page.
-        url: 'http://localhost:3000/',
+        url: 'www.ozcanozgur.com',
         handleCodeInApp: false
     };
     try {
         await sendPasswordResetEmail(auth, email, actionCodeSettings);
-        alert("Password reset link sent!");
+        alert("Password reset link sent! Please Check Spam!");
     } catch (err) {
         console.error(err);
         alert(err.message);

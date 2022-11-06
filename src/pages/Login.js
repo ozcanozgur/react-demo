@@ -17,10 +17,10 @@ function Login() {
 
     useEffect(() => {
         if (loading) {
-            // maybe trigger a loading screen
+            console.log(loading)
             return;
         }
-        if (user) navigate("/dashboard");
+        if (user) navigate("/");
     }, [user, loading]);
 
     return (
@@ -49,7 +49,7 @@ function Login() {
                 >
                     Login
                 </LoginButton >
-                <LoginGoogle className="login__btn login__google" onClick={signInWithGoogle}>
+                <LoginGoogle onClick={signInWithGoogle}>
                     Login with Google
                 </LoginGoogle>
                 <Wrapper>
@@ -64,7 +64,11 @@ function Login() {
 }
 
 const Container = styled.div`
-   
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 `;
 
 const LoginForm = styled.form`

@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 function Footer() {
     return (
-        <Container className='Footer'>
+        <Container>
             <p>©2019 Market</p>
             <p>•</p>
             <p>Privacy Policy</p>
@@ -12,9 +12,8 @@ function Footer() {
 }
 
 const Container = styled.div`
-display: flex;
-    position: fixed;
-    bottom: 0;
+    display: flex;
+    margin-top: 50px;
     color: #1ea3ce;
 `
 
