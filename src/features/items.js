@@ -5,6 +5,7 @@ export const initialState = {
     loading: false,
     error: false,
     items: [],
+    filteredItemsLength: 0,
     sortingBy: "priceLowToHigh",
     brands: [],
     selectedBrands: ["All"],
@@ -24,7 +25,8 @@ const itemSlice = createSlice({
         setItems: (state, { payload }) => {
             state.loading = false;
             state.error = false;
-            state.items = payload;
+            state.items = payload.data;
+            state.filteredItemsLength = payload.headers["x-total-count"];
         },
         setBrands: (state, { payload }) => {
             let brands, brand;
@@ -54,9 +56,15 @@ const itemSlice = createSlice({
             state.sortingBy = payload;
         },
         setSelectedBrands: (state, { payload }) => {
+            if (payload.length === 0) {
+                state.selectedBrands = ["All"];
+                return;
+            }
+
             if (payload.includes("All") && payload.length > 1) {
                 payload.splice(payload.indexOf("All"), 1);
             }
+
             state.selectedBrands = payload;
         },
         addBasket: (state, { payload }) => {
@@ -120,7 +128,7 @@ const api = axios.create({
 let isBrandsSetted;
 
 export function fetchItems(sortingBy, selectedBrands, activeItemType, paginationInfo) {
-    let order, sort, brands;
+    let order, sort, brands, url = "";
     let { currentPage } = paginationInfo;
 
     switch (sortingBy) {
@@ -142,7 +150,7 @@ export function fetchItems(sortingBy, selectedBrands, activeItemType, pagination
             break;
     }
 
-    let url = `items?_start=${(currentPage - 1) * 16}&_limit=${16}&_sort=${sort}&_order=${order}&itemType=${activeItemType}`;
+    url = `items?_start=${(currentPage - 1) * 16}&_limit=${16}&_sort=${sort}&_order=${order}&itemType=${activeItemType}`;
 
     if (selectedBrands[0] !== "All") {
         brands = "&manufacturer_like="
@@ -150,6 +158,7 @@ export function fetchItems(sortingBy, selectedBrands, activeItemType, pagination
     }
 
     return async (dispatch) => {
+
         dispatch(setLoading());
         if (!isBrandsSetted) {
             await api.get("items")
@@ -160,17 +169,17 @@ export function fetchItems(sortingBy, selectedBrands, activeItemType, pagination
                     dispatch(setError(er));
                 });
             isBrandsSetted = true;
-            return;
         }
 
-        api
-            .get(url)
-            .then((response) => {
-                //console.log(response)
-                dispatch(setItems(response.data));
-            })
-            .catch((er) => {
-                dispatch(setError(er));
-            });
+        if (isBrandsSetted) {
+            api
+                .get(url)
+                .then((response) => {
+                    dispatch(setItems(response));
+                })
+                .catch((er) => {
+                    dispatch(setError(er));
+                });
+        }
     };
 }

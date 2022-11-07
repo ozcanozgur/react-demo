@@ -10,15 +10,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchItems, itemsSelector } from "../features/items";
 import Footer from '../components/Footer';
 
-const AppWrapper = styled.div`
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 0 105px 0 105px;
-  background-color: #fafafa;
-`;
 
 function Home() {
     const [paginationInfo, setPaginationInfo] = useState({
@@ -31,7 +22,7 @@ function Home() {
     })
 
     const dispatch = useDispatch();
-    const { loading, error, items, sortingBy, selectedBrands, activeItemType, allItemsLength } = useSelector(itemsSelector);
+    const { loading, error, items, sortingBy, selectedBrands, activeItemType, filteredItemsLength } = useSelector(itemsSelector);
 
     useEffect(() => {
         dispatch(fetchItems(sortingBy, selectedBrands, activeItemType, paginationInfo));
@@ -57,7 +48,8 @@ function Home() {
                     <RightBar />
                 </AppContainer>
                 <PaginationContainer>
-                    <Pagination totalRecords={allItemsLength}
+
+                    <Pagination totalRecords={filteredItemsLength}
                         pageLimit={16}
                         initialPage={1}
                         pagesToShow={10}
@@ -69,12 +61,21 @@ function Home() {
     );
 }
 
+const AppWrapper = styled.div`
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 105px 0 105px;
+  background-color: #fafafa;
+`;
+
 const AppContainer = styled.div`
     display: flex;
     margin-top: 41px;
     max-width: 1232px;
 `
-
 const PaginationContainer = styled.div`
     display: flex;
     align-items: center;

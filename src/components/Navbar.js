@@ -43,11 +43,9 @@ function Navbar() {
                     <div>
                         Logged in as
                         <div>{name}</div>
-                        <div>{user?.email}</div>
                     </div>
                     <button onClick={logout}>
                         <img src={logoutIcon} alt="logout" />
-                        Logout
                     </button>
                 </LoginInfo>
                 <Logo>
@@ -90,6 +88,10 @@ const Basket = styled.div`
     background-color: #147594;
     padding: 0 22px;
     color: #FFFFFF;
+
+    img {
+        height: 25px;
+    }
 `
 
 const LoginInfo = styled(Basket)`
